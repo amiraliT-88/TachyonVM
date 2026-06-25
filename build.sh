@@ -7,7 +7,7 @@ UPSTREAM_BRANCH="master"
 WORK_DIR="jdk-src"
 
 echo "========================================"
-echo "      Building ServerJDK                "
+echo "      Building TachyonVM                "
 echo "========================================"
 
 if [ ! -d "$WORK_DIR" ]; then
@@ -21,7 +21,7 @@ else
     cd ..
 fi
 
-echo "=> Applying ServerJDK patches..."
+echo "=> Applying TachyonVM patches..."
 cd "$WORK_DIR"
 if [ -d "../patches" ] && [ "$(ls -A ../patches/*.patch 2>/dev/null)" ]; then
     for patch in ../patches/*.patch; do
@@ -40,7 +40,7 @@ bash configure \
     --with-native-debug-symbols=none \
     --with-debug-level=release
 
-echo "=> Compiling ServerJDK..."
+echo "=> Compiling TachyonVM..."
 make images
 
 echo "========================================"

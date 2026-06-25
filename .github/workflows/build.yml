@@ -1,4 +1,4 @@
-name: Build ServerJDK (Windows & Linux)
+name: Build TachyonVM (Windows & Linux)
 
 on:
   workflow_dispatch: # Allows you to manually trigger the build from GitHub UI
@@ -18,7 +18,7 @@ jobs:
       - name: Install Prerequisites
         run: sudo apt-get update && sudo apt-get install -y build-essential autoconf zip unzip openjdk-21-jdk
       
-      - name: Build ServerJDK (Linux)
+      - name: Build TachyonVM (Linux)
         run: |
           chmod +x build.sh
           ./build.sh
@@ -26,13 +26,13 @@ jobs:
       - name: Compress Linux JDK
         run: |
           cd jdk-src/build/*/images/jdk
-          zip -r ../../../../../ServerJDK-Linux-x64.zip .
+          zip -r ../../../../../TachyonVM-Linux-x64.zip .
       
       - name: Upload Linux Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ServerJDK-Linux
-          path: ServerJDK-Linux-x64.zip
+          name: TachyonVM-Linux
+          path: TachyonVM-Linux-x64.zip
 
   build-windows:
     name: Compile for Windows
@@ -59,7 +59,7 @@ jobs:
           distribution: 'temurin'
           java-version: '21'
       
-      - name: Build ServerJDK (Windows)
+      - name: Build TachyonVM (Windows)
         shell: msys2 {0}
         run: |
           chmod +x build.sh
@@ -68,11 +68,10 @@ jobs:
       - name: Compress Windows JDK
         shell: pwsh
         run: |
-          # Use PowerShell to zip the output directory cleanly
-          Compress-Archive -Path "jdk-src\build\*\images\jdk\*" -DestinationPath "ServerJDK-Windows-x64.zip"
+          Compress-Archive -Path "jdk-src\build\*\images\jdk\*" -DestinationPath "TachyonVM-Windows-x64.zip"
       
       - name: Upload Windows Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ServerJDK-Windows
-          path: ServerJDK-Windows-x64.zip
+          name: TachyonVM-Windows
+          path: TachyonVM-Windows-x64.zip
