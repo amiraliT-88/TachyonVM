@@ -1,0 +1,78 @@
+name: Build ServerJDK (Windows & Linux)
+
+on:
+  workflow_dispatch: # Allows you to manually trigger the build from GitHub UI
+  push:
+    branches:
+      - main
+      - master
+
+jobs:
+  build-linux:
+    name: Compile for Linux
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+      
+      - name: Install Prerequisites
+        run: sudo apt-get update && sudo apt-get install -y build-essential autoconf zip unzip openjdk-21-jdk
+      
+      - name: Build ServerJDK (Linux)
+        run: |
+          chmod +x build.sh
+          ./build.sh
+      
+      - name: Compress Linux JDK
+        run: |
+          cd jdk-src/build/*/images/jdk
+          zip -r ../../../../../ServerJDK-Linux-x64.zip .
+      
+      - name: Upload Linux Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ServerJDK-Linux
+          path: ServerJDK-Linux-x64.zip
+
+  build-windows:
+    name: Compile for Windows
+    runs-on: windows-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+      
+      - name: Setup MSYS2
+        uses: msys2/setup-msys2@v2
+        with:
+          update: true
+          install: >-
+            autoconf
+            make
+            zip
+            unzip
+            tar
+            git
+      
+      - name: Set up JDK 21 for Bootstrapping
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+      
+      - name: Build ServerJDK (Windows)
+        shell: msys2 {0}
+        run: |
+          chmod +x build.sh
+          ./build.sh
+      
+      - name: Compress Windows JDK
+        shell: pwsh
+        run: |
+          # Use PowerShell to zip the output directory cleanly
+          Compress-Archive -Path "jdk-src\build\*\images\jdk\*" -DestinationPath "ServerJDK-Windows-x64.zip"
+      
+      - name: Upload Windows Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ServerJDK-Windows
+          path: ServerJDK-Windows-x64.zip

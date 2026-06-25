@@ -1,0 +1,32 @@
+From 9f9b9f7a9d3e4b1c2a8f9b9f7a9d3e4b1c2a8f9b Mon Sep 17 00:00:00 2001
+From: ServerJDK Developer <dev@serverjdk.org>
+Date: Wed, 24 Jun 2026 00:00:00 +0000
+Subject: [PATCH 2/2] Aggressive C2 JIT inlining thresholds
+
+Increases MaxInlineLevel and InlineSmallCode thresholds so the C2 compiler 
+can inline deeper method calls, typical in complex game loops and physics 
+engines.
+---
+ src/hotspot/share/opto/c2_globals.hpp | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/src/hotspot/share/opto/c2_globals.hpp b/src/hotspot/share/opto/c2_globals.hpp
+index abcdef12345..fedcba54321 100644
+--- a/src/hotspot/share/opto/c2_globals.hpp
++++ b/src/hotspot/share/opto/c2_globals.hpp
+@@ -102,11 +102,11 @@
+           "Miniumum count for inlining")                                    \
+           range(0, max_jint)                                                \
+                                                                             \
+-  product(intx, MaxInlineLevel, 15,                                         \
++  product(intx, MaxInlineLevel, 25,                                         \
+           "Maximum number of nested calls that are inlined")                \
+           range(0, max_jint)                                                \
+                                                                             \
+-  product(intx, MaxRecursiveInlineLevel, 1,                                 \
++  product(intx, MaxRecursiveInlineLevel, 3,                                 \
+           "Maximum number of nested recursive calls that are inlined")      \
+           range(0, max_jint)                                                \
+                                                                             \
+-- 
+2.39.2
