@@ -21,28 +21,21 @@ else
     cd ..
 fi
 
-echo "=> Applying TachyonVM patches..."
+echo "=> Applying TachyonVM Source Modifications..."
 cd "$WORK_DIR"
-if [ -d "../patches" ] && [ "$(ls -A ../patches/*.patch 2>/dev/null)" ]; then
-    for patch in ../patches/*.patch; do
-        echo "   -> Applying $(basename "$patch")"
-        # Use dos2unix on the patch file to prevent CRLF issues on Linux
-        dos2unix "$patch" || true
-        git apply --ignore-whitespace --whitespace=nowarn "$patch" || {
-            echo "Failed to apply $patch via git apply. Attempting fallback sed injections..."
-            # Fallback sed injections if patch format mismatches slightly due to version differences
-            sed -i 's/product(uintx, MaxGCPauseMillis, 200/product(uintx, MaxGCPauseMillis, 50/' src/hotspot/share/gc/g1/g1_globals.hpp
-            sed -i 's/product(uintx, G1NewSizePercent, 5/product(uintx, G1NewSizePercent, 35/' src/hotspot/share/gc/g1/g1_globals.hpp
-            sed -i 's/product(intx, MaxInlineLevel, 15/product(intx, MaxInlineLevel, 25/' src/hotspot/share/opto/c2_globals.hpp
-        }
-    done
-else
-    echo "   -> No patches found in ../patches/"
-fi
+
+# Injecting performance values directly into the C++ source code headers
+echo "   -> Injecting G1GC optimizations..."
+sed -i 's/MaxGCPauseMillis, 200/MaxGCPauseMillis, 50/g' src/hotspot/share/gc/g1/g1_globals.hpp
+sed -i 's/G1NewSizePercent, 5/G1NewSizePercent, 35/g' src/hotspot/share/gc/g1/g1_globals.hpp
+
+echo "   -> Injecting C2 Compiler optimizations..."
+sed -i 's/MaxInlineLevel, 15/MaxInlineLevel, 25/g' src/hotspot/share/opto/c2_globals.hpp
+sed -i 's/MaxRecursiveInlineLevel, 1/MaxRecursiveInlineLevel, 3/g' src/hotspot/share/opto/c2_globals.hpp
 
 echo "=> Configuring build..."
 bash configure \
-    --with-jvm-features=zgc,shenandoah \
+    --with-jvm-features=zgc,shenandoahgc \
     --enable-cds=yes \
     --with-native-debug-symbols=none \
     --with-debug-level=release
