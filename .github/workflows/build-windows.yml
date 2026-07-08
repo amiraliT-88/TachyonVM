@@ -27,7 +27,7 @@ jobs:
           arch: x64
 
       - name: Build Custom JDK
-        shell: C:\tools\cygwin\bin\bash.exe --login --norc -eo pipefail -o igncr '{0}'
+        shell: C:\tools\cygwin\bin\bash.exe --norc -eo pipefail -o igncr '{0}'
         env:
           BOOT_JDK: ${{ env.JAVA_HOME }}
         run: |
