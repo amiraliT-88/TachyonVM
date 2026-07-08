@@ -30,13 +30,13 @@ jobs:
           dos2unix build-win.sh || true
           bash build-win.sh
 
-      - name: Archive JDK
-        shell: pwsh
+      - name: Compile Installer (.exe)
+        shell: cmd
         run: |
-          Compress-Archive -Path jdk25-src\build\windows-x86_64-server-release\images\jdk\* -DestinationPath TachyonVM-Win64.zip
+          "C:\Program Files (x86)\Inno Setup 6\iscc.exe" tachyonvm.iss
 
-      - name: Upload JDK Artifact
+      - name: Upload Installer Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: TachyonVM-Win64
-          path: TachyonVM-Win64.zip
+          name: TachyonVM-Installer-Win64
+          path: Output/TachyonVM-Installer-Win64.exe
