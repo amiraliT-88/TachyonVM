@@ -1,7 +1,9 @@
 name: Build TachyonVM (Windows)
 
 on:
-  workflow_dispatch: # Allows you to manually trigger the build from GitHub UI
+  workflow_dispatch:
+  push:
+    branches: [ "main" ]
 
 jobs:
   build-windows:
