@@ -34,6 +34,11 @@ sed -i 's/MaxRecursiveInlineLevel, 1/MaxRecursiveInlineLevel, 3/g' src/hotspot/s
 sed -i -E 's/InlineSmallCode, [0-9]+/InlineSmallCode, 4000/g' src/hotspot/share/opto/c2_globals.hpp
 sed -i -E 's/LoopUnrollLimit, [0-9]+/LoopUnrollLimit, 100/g' src/hotspot/share/opto/c2_globals.hpp
 
+echo "=> Fixing Cygwin MSVC linker conflict..."
+if [ -f "/usr/bin/link.exe" ]; then
+    mv /usr/bin/link.exe /usr/bin/link.exe.bak
+fi
+
 echo "=> Configuring build for Windows (MSVC)..."
 # CYGWIN path conversion for the Boot JDK downloaded by GitHub Actions
 CYG_BOOT_JDK=$(cygpath -u "$BOOT_JDK")
@@ -41,6 +46,7 @@ CYG_BOOT_JDK=$(cygpath -u "$BOOT_JDK")
 bash configure \
     --with-boot-jdk="$CYG_BOOT_JDK" \
     --with-toolchain-type=microsoft \
+    --with-toolchain-version=2022 \
     --with-jvm-features=zgc,shenandoahgc \
     --disable-warnings-as-errors \
     --with-debug-level=release \
