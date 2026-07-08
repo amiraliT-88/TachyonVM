@@ -1,34 +1,35 @@
-# ServerJDK
+# ⚡ TachyonVM
 
-ServerJDK is a high-performance, downstream fork of OpenJDK specifically tuned for heavy server workloads, particularly Minecraft servers (Paper, Purpur, Fabric) and high-throughput networking applications.
+TachyonVM is a hyper-optimized, downstream fork of OpenJDK 25 specifically engineered for heavy server workloads, with a strict focus on **Minecraft server performance (Paper, Purpur, Folia)**. 
 
-## Why ServerJDK?
+While generic JVMs (like GraalVM or Temurin) are built to run anywhere, TachyonVM modifies the raw C++ source code of the HotSpot Virtual Machine to default to the absolute most aggressive performance constraints.
 
-Default JDK distributions (like Eclipse Temurin, Oracle JDK, or standard OpenJDK) are built to be general-purpose. They balance footprint, startup time, and throughput for a wide variety of applications, from GUI tools to embedded devices.
+## 🚀 Why TachyonVM?
 
-ServerJDK strips away generic heuristics. It enforces aggressive Garbage Collection (GC) behavior and JIT compiler optimizations directly at the HotSpot C++ level. This dramatically reduces latency spikes and CPU overhead for server applications that generate massive amounts of short-lived objects.
+Instead of relying on massive startup flags (like Aikar's flags) to fix JVM behavior, TachyonVM fundamentally rewrites the engine's default DNA:
 
-### Core Modifications
+- **Extreme C2 JIT Compiler Tuning**: 
+  - `LoopUnrollLimit` increased to 100: Radically reduces CPU branching during heavy Minecraft game loops (chunk generation, pathfinding).
+  - `InlineSmallCode` increased to 4000: Forces the JVM to aggressively merge method calls for maximum single-thread TPS throughput.
+- **Aggressive G1GC Tuning**: 
+  - `G1ReservePercent` hardcoded to 15%: Creates a massive safety net in RAM to permanently eliminate lag spikes (to-space exhaustion).
+  - `G1HeapWastePercent` reduced to 2% for stricter memory management.
+- **True Headless Environment**: Compiled with `--enable-headless-only`. TachyonVM physically cannot render graphical interfaces (AWT/Swing), making the `-nogui` flag obsolete and saving precious CPU/RAM.
 
-- **Aggressive C2 Inlining**: Increased `MaxInlineLevel` and `InlineSmallCode` thresholds. Deeply nested game loops and physics engines compile to native machine code much more effectively.
-- **GC Tuning (G1 & ZGC)**: Hardcoded pause-time goals and young-generation scaling to handle millions of short-lived objects (e.g., Voxel `BlockPos` structures) per second without choking the main thread.
-- **Math Intrinsics**: Forced AVX/AVX2 hardware utilization for trigonometric functions used heavily in spatial algorithms, collision detection, and chunk generation.
+## 📦 Building from Source
 
-## Building from Source
+TachyonVM is built differently for Linux and Windows to maximize hardware utilization.
 
-### Prerequisites
-
-- Linux (Debian/Ubuntu/Arch) or WSL2 on Windows
-- GCC/Clang Toolchain, `make`, `autoconf`, `unzip`, `zip`
-- A Boot JDK (JDK 23 or 24)
-
-### Build Instructions
-
+### 🐧 Linux (Hardware-Native Build)
+For Linux, TachyonVM is compiled directly against your CPU architecture (`-march=native -O3`). This guarantees the binary utilizes the exact vector instructions (AVX2/AVX-512) your hardware supports.
 ```bash
-git clone https://github.com/yourusername/ServerJDK.git
-cd ServerJDK
-chmod +x build.sh
-./build.sh
+dos2unix build25.sh
+bash build25.sh
 ```
 
-This script will automatically pull the upstream OpenJDK 24 repository, apply the ServerJDK HotSpot patches cleanly, and compile the JVM. The resulting JDK image can be used as a drop-in replacement for your server startup scripts.
+### 🪟 Windows (Cloud Build)
+We use GitHub Actions to automate the massive Windows compilation process. 
+1. Go to the **Actions** tab in this repository.
+2. Select **Build TachyonVM (Windows)**.
+3. Click **Run workflow**. 
+4. Download the `TachyonVM-Win64.zip` artifact when complete.
