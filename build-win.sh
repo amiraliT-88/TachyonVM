@@ -48,10 +48,7 @@ bash configure \
     --with-vendor-version-string="Asus-Edition" \
     --with-version-pre="tachyon" \
     --with-version-opt="custom" \
-    --enable-headless-only \
-    --with-extra-cflags="-O3" \
-    --with-extra-cxxflags="-O3" \
-    --with-extra-ldflags="-O3"
+    --enable-headless-only
 
 echo "=> Compiling TachyonVM JDK 25 for Windows..."
 make images
