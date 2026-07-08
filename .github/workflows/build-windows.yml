@@ -1,0 +1,42 @@
+name: Build TachyonVM (Windows)
+
+on:
+  workflow_dispatch: # Allows you to manually trigger the build from GitHub UI
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Boot JDK 24
+        uses: actions/setup-java@v4
+        with:
+          java-version: '24'
+          distribution: 'temurin'
+
+      - name: Setup Cygwin
+        uses: egor-tensin/setup-cygwin@v4
+        with:
+          packages: autoconf make zip unzip wget tar git grep sed dos2unix
+
+      - name: Build Custom JDK
+        shell: C:\tools\cygwin\bin\bash.exe --login --norc -eo pipefail -o igncr '{0}'
+        env:
+          BOOT_JDK: ${{ env.JAVA_HOME }}
+        run: |
+          cd "$GITHUB_WORKSPACE"
+          dos2unix build-win.sh || true
+          bash build-win.sh
+
+      - name: Archive JDK
+        shell: pwsh
+        run: |
+          Compress-Archive -Path jdk25-src\build\windows-x86_64-server-release\images\jdk\* -DestinationPath TachyonVM-Win64.zip
+
+      - name: Upload JDK Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: TachyonVM-Win64
+          path: TachyonVM-Win64.zip
