@@ -11,7 +11,7 @@ echo "========================================"
 
 if [ ! -d "$WORK_DIR" ]; then
     echo "=> Cloning upstream OpenJDK 25..."
-    git clone --depth 1 -b "$UPSTREAM_BRANCH" "$UPSTREAM_REPO" "$WORK_DIR"
+    git clone -c core.autocrlf=false --depth 1 -b "$UPSTREAM_BRANCH" "$UPSTREAM_REPO" "$WORK_DIR"
 else
     echo "=> Upstream already cloned. Resetting..."
     cd "$WORK_DIR"

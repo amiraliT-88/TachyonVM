@@ -19,7 +19,7 @@ jobs:
       - name: Setup Cygwin
         uses: egor-tensin/setup-cygwin@v4
         with:
-          packages: autoconf make zip unzip wget tar grep sed dos2unix ca-certificates
+          packages: autoconf make zip unzip wget tar grep sed dos2unix ca-certificates file
 
       - name: Build Custom JDK
         shell: C:\tools\cygwin\bin\bash.exe --login --norc -eo pipefail -o igncr '{0}'
