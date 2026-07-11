@@ -10,10 +10,10 @@ BOOT_JDK="/home/asus/ServerJDK/jdk-src/build/linux-x86_64-server-release/images/
 echo "building tachyonvm jdk25..."
 
 if [ ! -d "$WORK_DIR" ]; then
-    echo "=> Cloning upstream OpenJDK 25 (this might take a while)..."
+    echo "cloning openjdk 25..."
     git clone --depth 1 -b "$UPSTREAM_BRANCH" "$UPSTREAM_REPO" "$WORK_DIR"
 else
-    echo "=> Upstream already cloned. Resetting..."
+    echo "upstream already cloned. resetting..."
     cd "$WORK_DIR"
     git reset --hard HEAD
     # git clean -fdx
@@ -41,7 +41,7 @@ echo "   -> fixing gcc 15 compat..."
 # Sometimes JDK 25 fixes this, but it's safe to run sed just in case
 sed -i 's/static inline unsigned int uabs(int n)/\/\/ static inline unsigned int uabs(int n)/g' src/hotspot/share/utilities/globalDefinitions.hpp || true
 
-echo "=> Configuring build..."
+echo "configuring build..."
 mkdir -p /home/asus/ServerJDK/bin
 echo '#!/bin/bash' > /home/asus/ServerJDK/bin/date
 echo 'if [[ "$1" == "--version" ]]; then echo "GNU"; else /usr/bin/date "$@"; fi' >> /home/asus/ServerJDK/bin/date
@@ -68,7 +68,7 @@ bash configure \
     --with-extra-ldflags="-O3" \
     --enable-headless-only
 
-echo "=> Compiling TachyonVM JDK 25..."
+echo "compiling tachyonvm jdk25..."
 make images
 
 echo "done!"
