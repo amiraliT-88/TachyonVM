@@ -1,4 +1,4 @@
-name: Build TachyonVM (Windows & Linux)
+name: build workflows
 
 on:
   workflow_dispatch:
@@ -9,40 +9,40 @@ on:
 
 jobs:
   build-linux:
-    name: Compile for Linux
+    name: compile linux
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Code
+      - name: checkout code
         uses: actions/checkout@v4
       
-      - name: Install Prerequisites
+      - name: install packages
         run: sudo apt-get update && sudo apt-get install -y build-essential autoconf zip unzip openjdk-21-jdk dos2unix libasound2-dev libcups2-dev libfontconfig1-dev libx11-dev libxext-dev libxrender-dev libxrandr-dev libxtst-dev libxt-dev
       
-      - name: Build TachyonVM (Linux)
+      - name: build linux
         run: |
           dos2unix build.sh
           chmod +x build.sh
           ./build.sh
       
-      - name: Compress Linux JDK
+      - name: compress output
         run: |
           cd jdk-src/build/*/images/jdk
           zip -r ../../../../../TachyonVM-Linux-x64.zip .
       
-      - name: Upload Linux Artifact
+      - name: upload linux artifact
         uses: actions/upload-artifact@v4
         with:
           name: TachyonVM-Linux
           path: TachyonVM-Linux-x64.zip
 
   build-windows:
-    name: Compile for Windows
+    name: compile windows
     runs-on: windows-latest
     steps:
-      - name: Checkout Code
+      - name: checkout code
         uses: actions/checkout@v4
       
-      - name: Setup MSYS2
+      - name: setup msys2
         uses: msys2/setup-msys2@v2
         with:
           update: true
@@ -55,20 +55,20 @@ jobs:
             git
             dos2unix
       
-      - name: Set up JDK 21 for Bootstrapping
+      - name: setup boot jdk
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: '21'
       
-      - name: Build TachyonVM (Windows)
+      - name: build windows
         shell: msys2 {0}
         run: |
           dos2unix build.sh
           chmod +x build.sh
           ./build.sh || echo "Windows build failed, but we continue to get logs"
       
-      - name: Compress Windows JDK
+      - name: compress output
         shell: pwsh
         run: |
           if (Test-Path "jdk-src\build\*\images\jdk\*") {
@@ -77,7 +77,7 @@ jobs:
             Write-Host "JDK build directory not found, skipping compression."
           }
       
-      - name: Upload Windows Artifact
+      - name: upload windows artifact
         uses: actions/upload-artifact@v4
         if: always()
         with:

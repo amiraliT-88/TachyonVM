@@ -1,4 +1,4 @@
-name: Build TachyonVM (Windows)
+name: build windows
 
 on:
   workflow_dispatch:
@@ -9,26 +9,26 @@ jobs:
   build-windows:
     runs-on: windows-2022
     steps:
-      - name: Checkout Repository
+      - name: checkout code
         uses: actions/checkout@v4
 
-      - name: Set up Boot JDK 24
+      - name: setup boot jdk
         uses: actions/setup-java@v4
         with:
           java-version: '24'
           distribution: 'temurin'
 
-      - name: Setup Cygwin
+      - name: setup cygwin
         uses: egor-tensin/setup-cygwin@v4
         with:
           packages: autoconf make zip unzip wget tar grep sed dos2unix ca-certificates file
 
-      - name: Setup Visual Studio Environment
+      - name: setup msvc
         uses: ilammy/msvc-dev-cmd@v1
         with:
           arch: x64
 
-      - name: Build Custom JDK
+      - name: compile jdk
         shell: C:\tools\cygwin\bin\bash.exe --norc -eo pipefail -o igncr '{0}'
         env:
           BOOT_JDK: ${{ env.JAVA_HOME }}
@@ -37,12 +37,12 @@ jobs:
           dos2unix build-win.sh || true
           bash build-win.sh
 
-      - name: Compile Installer (.exe)
+      - name: compile inno setup installer
         shell: cmd
         run: |
           "C:\Program Files (x86)\Inno Setup 6\iscc.exe" tachyonvm.iss
 
-      - name: Upload Installer Artifact
+      - name: upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: TachyonVM-Server-Windows-Installer
