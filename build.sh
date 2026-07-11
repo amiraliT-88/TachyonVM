@@ -6,9 +6,7 @@ UPSTREAM_REPO="https://github.com/openjdk/jdk24u.git"
 UPSTREAM_BRANCH="master"
 WORK_DIR="jdk-src"
 
-echo "========================================"
-echo "      Building TachyonVM (JDK 24)       "
-echo "========================================"
+echo "building tachyonvm jdk24..."
 
 if [ ! -d "$WORK_DIR" ]; then
     echo "=> Cloning upstream OpenJDK 24 (this might take a while)..."
@@ -21,19 +19,19 @@ else
     cd ..
 fi
 
-echo "=> Applying TachyonVM Source Modifications..."
+echo "patching hotspot..."
 cd "$WORK_DIR"
 
 # Injecting performance values directly into the C++ source code headers
-echo "   -> Injecting G1GC optimizations..."
+echo "   -> applying g1gc tweaks..."
 sed -i 's/MaxGCPauseMillis, 200/MaxGCPauseMillis, 50/g' src/hotspot/share/gc/g1/g1_globals.hpp
 sed -i 's/G1NewSizePercent, 5/G1NewSizePercent, 35/g' src/hotspot/share/gc/g1/g1_globals.hpp
 
-echo "   -> Injecting C2 Compiler optimizations..."
+echo "   -> applying c2 compiler tweaks..."
 sed -i 's/MaxInlineLevel, 15/MaxInlineLevel, 25/g' src/hotspot/share/opto/c2_globals.hpp
 sed -i 's/MaxRecursiveInlineLevel, 1/MaxRecursiveInlineLevel, 3/g' src/hotspot/share/opto/c2_globals.hpp
 
-echo "   -> Fixing GCC 15 C++ compatibility..."
+echo "   -> fixing gcc 15 compat..."
 sed -i 's/static inline unsigned int uabs(int n)/\/\/ static inline unsigned int uabs(int n)/g' src/hotspot/share/utilities/globalDefinitions.hpp
 
 echo "=> Configuring build..."
@@ -62,6 +60,5 @@ bash configure \
 echo "=> Compiling TachyonVM..."
 make images
 
-echo "========================================"
-echo "=> Build complete!"
-echo "=> JDK image is located in: $WORK_DIR/build/*/images/jdk"
+echo "done!"
+echo "image: $WORK_DIR/build/*/images/jdk"

@@ -39,10 +39,10 @@ begin
     BinDir := ExpandConstant('{app}\bin');
     JavaHome := ExpandConstant('{app}');
     
-    { Set JAVA_HOME }
+    // set java_home
     RegWriteExpandStringValue(HKEY_LOCAL_MACHINE, EnvironmentKey, 'JAVA_HOME', JavaHome);
     
-    { Update PATH }
+    // update path
     if RegQueryStringValue(HKEY_LOCAL_MACHINE, EnvironmentKey, 'Path', Paths) then
     begin
       if Pos(';' + BinDir + ';', ';' + Paths + ';') = 0 then
@@ -64,10 +64,10 @@ begin
   begin
     BinDir := ExpandConstant('{app}\bin');
     
-    { Remove JAVA_HOME }
+    // remove java_home
     RegDeleteValue(HKEY_LOCAL_MACHINE, EnvironmentKey, 'JAVA_HOME');
     
-    { Remove from PATH }
+    // remove from path
     if RegQueryStringValue(HKEY_LOCAL_MACHINE, EnvironmentKey, 'Path', Paths) then
     begin
       StringChangeEx(Paths, BinDir + ';', '', True);
