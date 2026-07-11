@@ -33,3 +33,26 @@ We use GitHub Actions to automate the massive Windows compilation process.
 2. Select **Build TachyonVM (Windows)**.
 3. Click **Run workflow**. 
 4. Download the `TachyonVM-Win64.zip` artifact when complete.
+
+## 🎮 Recommended Minecraft Startup Flags
+
+Since TachyonVM (Server Edition) handles aggressive C2 Compiler and G1GC optimizations natively at the source level, your server startup script should be exceptionally clean.
+
+**Do NOT use massive flag lists like Aikar's flags** (they will conflict with our source-level DNA edits). Also, because TachyonVM is based on JDK 25, you must include `-DPaper.IgnoreJavaVersion=true` to prevent Paper/Purpur from blocking the startup.
+
+Use the following `start.bat` (Windows) or `start.sh` (Linux) for maximum performance:
+
+```bat
+@echo off
+title Minecraft Server
+set fileName="server.jar"
+set /A memory=8144
+
+:start
+"C:\Program Files\TachyonVM-Server\bin\java.exe" -DPaper.IgnoreJavaVersion=true -Xms%memory%M -Xmx%memory%M -XX:+AlwaysPreTouch -XX:+DisableExplicitGC -XX:+UseG1GC -XX:+PerfDisableSharedMem --add-modules jdk.incubator.vector -jar %fileName% --nogui
+
+echo Restarting in 5 seconds...
+echo Press CTRL + C to cancel.
+timeout 5
+goto :start
+```
