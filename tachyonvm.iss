@@ -1,10 +1,15 @@
+#define MyAppName "TachyonVM (Server Edition)"
+#define MyAppVersion "25.0"
+#define MyAppPublisher "AmiraliT"
+
 [Setup]
-AppName=TachyonVM
-AppVersion=25.0
-AppPublisher=AmiraliT
-DefaultDirName={autopf}\TachyonVM
-DefaultGroupName=TachyonVM
-OutputBaseFilename=TachyonVM-Installer-Win64
+AppId={{TACHYONVM-SERVER-1234-5678-ABCD}}
+AppName={#MyAppName}
+AppVersion={#MyAppVersion}
+AppPublisher={#MyAppPublisher}
+DefaultDirName={autopf}\TachyonVM-Server
+DefaultGroupName={#MyAppName}
+OutputBaseFilename=TachyonVM-Server-Installer-Win64
 Compression=lzma2/ultra64
 SolidCompression=yes
 ArchitecturesAllowed=x64

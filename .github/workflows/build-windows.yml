@@ -45,5 +45,5 @@ jobs:
       - name: Upload Installer Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: TachyonVM-Installer-Win64
-          path: Output/TachyonVM-Installer-Win64.exe
+          name: TachyonVM-Server-Windows-Installer
+          path: Output/TachyonVM-Server-Installer-Win64.exe
