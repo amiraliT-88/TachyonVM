@@ -1,7 +1,5 @@
 <div align="center">
-  <img src="banner.png" alt="TachyonVM Banner" width="100%" />
-
-  # TachyonVM
+  # ⚡ TachyonVM
   
   **A high-performance, custom OpenJDK 25 build aggressively tuned for low-latency Minecraft servers.**
   
