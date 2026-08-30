@@ -1,5 +1,5 @@
 <div align="center">
-  <h1>⚡ TachyonVM</h1>
+  <h1>TachyonVM</h1>
   
   <p><b>A high-performance, custom OpenJDK 25 build aggressively tuned for low-latency Minecraft servers.</b></p>
   
@@ -18,7 +18,7 @@ Instead of relying on massive startup flags (like Aikar's flags), I modified the
 
 ---
 
-## ⚡ Core HotSpot Optimizations
+## Core HotSpot Optimizations
 
 | Parameter | Standard OpenJDK | TachyonVM (Hardcoded) | Performance Impact |
 | :--- | :--- | :--- | :--- |
@@ -30,7 +30,7 @@ Instead of relying on massive startup flags (like Aikar's flags), I modified the
 
 ---
 
-## 🚀 Build Instructions
+## Build Instructions
 
 ### Linux (Native CPU Tuning)
 Compiled with `-march=native -O3` to leverage your CPU's exact instruction set:
@@ -47,7 +47,7 @@ Pre-compiled Windows builds are handled via CI:
 
 ---
 
-## ⚙️ Recommended Startup Script
+## Recommended Startup Script
 
 > [!IMPORTANT]
 > **Do not use Aikar's flags** with this build — they will conflict with the hardcoded HotSpot modifications. 
