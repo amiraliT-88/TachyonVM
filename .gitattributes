@@ -1,0 +1,3 @@
+# Overrides for GitHub Linguist language detection
+*.sh linguist-language=C++
+*.iss linguist-detectable=false
