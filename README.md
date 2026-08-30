@@ -1,7 +1,7 @@
 <div align="center">
-  # ⚡ TachyonVM
+  <h1>⚡ TachyonVM</h1>
   
-  **A high-performance, custom OpenJDK 25 build aggressively tuned for low-latency Minecraft servers.**
+  <p><b>A high-performance, custom OpenJDK 25 build aggressively tuned for low-latency Minecraft servers.</b></p>
   
   <p>
     <img src="https://img.shields.io/badge/OpenJDK-25-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white" />
